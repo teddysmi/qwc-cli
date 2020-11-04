@@ -86,12 +86,7 @@ public class ExcelFileParser {
                     
                     switch(colList[col]){
                         case 0:
-                            try {
-                                long msisdn = Long.parseLong(text);
-                                feb.setMsisdn(msisdn);
-                            }catch (NumberFormatException e){
-                                System.out.println(e.getMessage());
-                            }
+                            feb.setMsisdn(text.trim());
                             break;
                         case 1:
                             feb.setBrn(text);
@@ -200,12 +195,7 @@ public class ExcelFileParser {
 
                     switch (colList[col]) {
                         case 0:
-                            try {
-                                long msisdn = Long.parseLong(text);
-                                si.setMsisdn(msisdn);
-                            } catch (NumberFormatException e) {
-                                System.out.println(e.getMessage());
-                            }
+                            si.setMsisdn(text.trim());
                             break;
                         case 1:
                             si.setBrn(text);

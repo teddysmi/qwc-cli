@@ -75,7 +75,7 @@ public class ShellCommand {
 		if (file.exists()) {
 
 
-			Map<Long, Double> x = TxtFileParser.parse(path);
+			Map<String, Double> x = TxtFileParser.parse(path);
 
 		} else {
 			LOGGER.error("File does not exist");
