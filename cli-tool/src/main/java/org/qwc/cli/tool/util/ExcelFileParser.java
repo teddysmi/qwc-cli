@@ -2,40 +2,31 @@ package org.qwc.cli.tool.util;
 
 import org.apache.poi.ss.usermodel.*;
 import org.qwc.cli.tool.dao.SIEntity;
-import org.qwc.cli.tool.service.FebService;
+import org.qwc.cli.tool.service.FebService.Feb;
 import org.qwc.cli.tool.dao.FebEntity;
-import org.qwc.cli.tool.service.SIService;
+import org.qwc.cli.tool.service.SIService.SI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ExcelFileParser {
 
-    public Workbook workbook;
 
-    @Autowired
-    FebService febService;
-
-    @Autowired
-    SIService siService;
-
-
-    public ExcelFileParser(String filename){
+    public static List<Feb> parseFeb(String filename){
+        Workbook workbook = null;
+        List<Feb> febList = new ArrayList<>();
         try {
             workbook = WorkbookFactory.create(new File(filename));
 
         }catch (IOException e){
             System.out.println(e.getMessage());
+            return febList;
         }
 
-
-    }
-
-    public void parseFeb(){
-
-        febService.clearFeb();
 
         Sheet sheet = workbook.getSheet("Feb20 Acct");
         DataFormatter formatter = new DataFormatter();
@@ -83,7 +74,7 @@ public class ExcelFileParser {
 
                             
             }else{
-                FebService.Feb feb = new FebService.Feb();
+                Feb feb = new Feb();
 
                 for (int col = 0;col<colList.length;col++){
                     Cell cell = row.getCell(colList[col], Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
@@ -130,19 +121,29 @@ public class ExcelFileParser {
 
                     }
 
-                    febService.createFeb(feb);
-
+                }
+                if (feb.getMsisdn()!=null) {
+                    febList.add(feb);
                 }
             }
             headerRow=false;
         }
-
+        return febList;
     }
 
 
-    public void parseSI(){
+    public static List<SI> parseSI(String filename){
 
-        siService.clearSI();
+        Workbook workbook = null;
+        List<SI> siList = new ArrayList<>();
+        try {
+            workbook = WorkbookFactory.create(new File(filename));
+
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            return siList;
+        }
+
 
         Sheet sheet = workbook.getSheet("SI level");
         DataFormatter formatter = new DataFormatter();
@@ -186,23 +187,23 @@ public class ExcelFileParser {
                 }
 
 
-            }else{
-                SIService.SI si = new SIService.SI();
+            }else {
+                SI si = new SI();
 
-                for (int col = 0;col<colList.length;col++){
+                for (int col = 0; col < colList.length; col++) {
                     Cell cell = row.getCell(colList[col], Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
-                    if (cell==null){
+                    if (cell == null) {
                         continue;
                     }
                     String text = formatter.formatCellValue(cell);
 
 
-                    switch(colList[col]){
+                    switch (colList[col]) {
                         case 0:
                             try {
                                 long msisdn = Long.parseLong(text);
                                 si.setMsisdn(msisdn);
-                            }catch(NumberFormatException e){
+                            } catch (NumberFormatException e) {
                                 System.out.println(e.getMessage());
                             }
                             break;
@@ -229,12 +230,15 @@ public class ExcelFileParser {
                             break;
                     }
 
-                    siService.createSI(si);
 
+                }
+                if (si.getMsisdn() != null) {
+                    siList.add(si);
                 }
             }
             headerRow=false;
         }
+        return siList;
     }
 
 }
