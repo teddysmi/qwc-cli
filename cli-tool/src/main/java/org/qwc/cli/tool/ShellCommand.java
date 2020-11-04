@@ -1,6 +1,7 @@
 package org.qwc.cli.tool;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -8,6 +9,11 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.qwc.cli.tool.scheduled.FetchMail;
 import org.qwc.cli.tool.service.UserService;
 import org.qwc.cli.tool.service.UserService.User;
+import org.qwc.cli.tool.service.FebService;
+import org.qwc.cli.tool.service.FebService.Feb;
+import org.qwc.cli.tool.service.SIService;
+import org.qwc.cli.tool.service.SIService.SI;
+import org.qwc.cli.tool.util.ExcelFileParser;
 import org.qwc.cli.tool.util.DateUtil;
 import org.qwc.cli.tool.util.TxtFileParser;
 import org.slf4j.Logger;
@@ -23,6 +29,12 @@ public class ShellCommand {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private FebService febService;
+
+	@Autowired
+	private SIService siService;
 
 	@ShellMethod(value = "Add two integers together.", group = "Mathematical Commands")
 	public int add(int a, int b) {
@@ -62,7 +74,8 @@ public class ShellCommand {
 		File file = new File(path);
 		if (file.exists()) {
 
-			Map<String, Double> x = TxtFileParser.parse(path);
+
+			Map<Long, Double> x = TxtFileParser.parse(path);
 
 		} else {
 			LOGGER.error("File does not exist");
@@ -73,8 +86,11 @@ public class ShellCommand {
 	}
 	/*
 	 * txt "C:/\Users/\ekxz900/\Desktop/\Daily_PPU_20201015 project.txt"
-	 * 
+	 * txt "C:/Users/chown/Downloads/Parse/Daily_PPU_20201015 project.txt"
+	 *
 	 * save johndoe.dev99@gmail.com Password0@
+	 *
+	 * load-db "C:/Users/chown/IdeaProjects/parsetTest/src/main/resources/test2.xlsx"
 	 */
 
 	@ShellMethod(value = "Parse excel and load to DB", group = "Parser Commands")
@@ -84,10 +100,25 @@ public class ShellCommand {
 
 		File file = new File(path);
 		if (file.exists()) {
+			List<Feb> febList = ExcelFileParser.parseFeb(path);
+			if (febList.isEmpty()){
+				LOGGER.error("could not load file");
+				return "Could not load file";
+			}
+			febService.createFeb(febList);
 
+			List<SI> siList = ExcelFileParser.parseSI(path);
+
+			siService.createSI(siList);
+
+
+
+		}else {
+			LOGGER.error("File does not exist");
+			return "Invalid file path";
 		}
 
-		return "Successfully saved email credentials!";
+		return "Successfully loaded into database";
 	}
 
 	@ShellMethod(value = "Get current YYYYMMDD", group = "Date Commands")
