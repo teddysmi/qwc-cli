@@ -1,7 +1,11 @@
 package org.qwc.cli.tool.scheduled;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.qwc.cli.tool.service.FebService;
+import org.qwc.cli.tool.service.SIService;
 import org.qwc.cli.tool.service.UserService;
 import org.qwc.cli.tool.service.UserService.User;
 import org.qwc.cli.tool.util.Pop3MailUtil;
@@ -24,6 +28,12 @@ public class FetchMail {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private FebService febService;
+
+	@Autowired
+	private SIService siService;
+
 	//@Scheduled(fixedDelay = 10000, initialDelay = 10000)
 	public void scheduledDailyFetchMailTask() {
 		System.out.println("Start");
@@ -39,8 +49,15 @@ public class FetchMail {
 
 		System.out.println(filePath);
 
-		Map<Long, Double> x = TxtFileParser.parse(filePath);
-		x.entrySet().forEach(System.out::println);
+		Map<String, Double> dailyPPUData = TxtFileParser.parse(filePath);
+		List<String> msisdnNotFound = new ArrayList<>();
+
+		for(String msisdn : dailyPPUData.keySet()){
+			if(!febService.findByMsisdn(msisdn)){
+				msisdnNotFound.add(msisdn);
+			}
+		}
+		msisdnNotFound.removeIf(msisdn -> siService.findByMsisdn(msisdn));
 		// System.out.println(x.size());
 
 		System.out.println("End");
