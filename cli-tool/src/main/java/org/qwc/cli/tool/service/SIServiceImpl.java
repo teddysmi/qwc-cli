@@ -40,9 +40,9 @@ public class SIServiceImpl implements SIService {
     }
 
     @Override
-    public boolean findByID(Long id) {
+    public boolean findByMsisdn(String msisdn) {
 
-        Optional<SIEntity> siEntity = siRepository.findById(id);
+        Optional<SIEntity> siEntity = siRepository.findByMsisdn(msisdn);
 
         return siEntity.isPresent();
     }

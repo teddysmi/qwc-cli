@@ -40,9 +40,9 @@ public class FebServiceImpl implements FebService {
 	}
 
 	@Override
-	public boolean findByID(Long id) {
+	public boolean findByMsisdn(String msisdn) {
 
-		Optional<FebEntity> febEntity = febRepository.findById(id);
+		Optional<FebEntity> febEntity = febRepository.findByMsisdn(msisdn);
 		return febEntity.isPresent();
 
 	}

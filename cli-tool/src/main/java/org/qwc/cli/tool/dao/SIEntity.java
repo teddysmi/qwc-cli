@@ -14,8 +14,12 @@ import javax.persistence.Table;
 public class SIEntity implements Serializable {
 
     @Id
-    @Column(name = "MSISDN", unique = true, nullable = false)
-    private Long msisdn;
+    @Column(name = "Id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
+
+    @Column(name = "MSISDN", unique = true, nullable = false, length = 255)
+    private String msisdn;
 
     @Column(name = "BRN", nullable = true, updatable = false, length = 255)
     private String brn;
@@ -39,11 +43,19 @@ public class SIEntity implements Serializable {
     private String type;
 
 
-    public Long getMsisdn() {
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public String getMsisdn() {
         return msisdn;
     }
 
-    public void setMsisdn(Long msisdn) {
+    public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
 

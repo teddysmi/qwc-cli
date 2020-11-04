@@ -15,8 +15,12 @@ import javax.persistence.Table;
 public class FebEntity implements Serializable {
 
     @Id
-    @Column(name = "MSISDN", unique = true, nullable = false)
-    private Long msisdn;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id", unique = true, nullable = false)
+    private Long Id;
+
+    @Column(name = "MSISDN", unique = true, nullable = false, length = 255 )
+    private String msisdn;
 
     @Column(name = "BRN", nullable = true, updatable = false, length = 255)
     private String brn;
@@ -42,13 +46,20 @@ public class FebEntity implements Serializable {
     @Column(name = "Start_Date", nullable = true, updatable = false, length = 255)
     private String startDate;
 
-
-    public Long getMsisdn() {
-        return msisdn;
+    public Long getId() {
+        return Id;
     }
 
-    public void setMsisdn(Long msisdn) {
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
     }
 
     public String getBrn() {

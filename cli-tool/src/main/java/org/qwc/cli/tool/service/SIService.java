@@ -6,14 +6,15 @@ import org.qwc.cli.tool.dao.UserEntity;
 import java.util.List;
 
 public interface SIService {
-    boolean findByID(Long id);
+    boolean findByMsisdn(String msisdn);
 
     SI getSI();
 
     void createSI(List<SI> siList);
 
     public class SI {
-        private Long msisdn;
+        private Long id;
+        private String msisdn;
         private String brn;
         private String custFullName;
         private String siLvlCmpntId;
@@ -27,7 +28,8 @@ public interface SIService {
             //
         }
 
-        public SI(Long msisdn, String brn, String custFullName, String acctLvlCmpntId, String acctLvlCmpntDesc, String billAcctNo, String custClasfnDesc, String type, String startDate) {
+        public SI(Long id, String msisdn, String brn, String custFullName, String acctLvlCmpntId, String acctLvlCmpntDesc, String billAcctNo, String custClasfnDesc, String type, String startDate) {
+            this.id = id;
             this.msisdn = msisdn;
             this.brn = brn;
             this.custFullName = custFullName;
@@ -38,11 +40,19 @@ public interface SIService {
             this.type = type;
         }
 
-        public Long getMsisdn() {
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getMsisdn() {
             return msisdn;
         }
 
-        public void setMsisdn(Long msisdn) {
+        public void setMsisdn(String msisdn) {
             this.msisdn = msisdn;
         }
 
@@ -103,6 +113,7 @@ public interface SIService {
         }
 
         public void loadIntoEntity(SIEntity entity) {
+            entity.setId(this.id);
             entity.setMsisdn(this.msisdn);
             entity.setSiCmpntDesc(this.siCmpntDesc);
             entity.setSiLvlCmpntId(this.siLvlCmpntId);
@@ -114,6 +125,7 @@ public interface SIService {
         }
 
         public void loadFromEntity(SIEntity entity) {
+            this.id = entity.getId();
             this.msisdn = entity.getMsisdn();
             this.siCmpntDesc = entity.getSiCmpntDesc();
             this.siLvlCmpntId = entity.getSiLvlCmpntId();

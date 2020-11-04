@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FebService {
 
-	boolean findByID(Long id);
+	boolean findByMsisdn(String msisdn);
 
 	Feb getFeb();
 
@@ -15,7 +15,8 @@ public interface FebService {
 
 	public class Feb {
 
-		private Long msisdn;
+		private Long id;
+		private String msisdn;
 		private String brn;
 		private String custFullName;
 		private String acctLvlCmpntId;
@@ -29,8 +30,9 @@ public interface FebService {
 			//
 		}
 
-		public Feb(Long msisdn, String brn, String custFullName, String acctLvlCmpntId, String acctLvlCmpntDesc,
+		public Feb(Long id, String msisdn, String brn, String custFullName, String acctLvlCmpntId, String acctLvlCmpntDesc,
 				String billAcctNo, String custClasfnDesc, String type, String startDate) {
+			this.id = id;
 			this.msisdn = msisdn;
 			this.brn = brn;
 			this.custFullName = custFullName;
@@ -42,11 +44,19 @@ public interface FebService {
 			this.startDate = startDate;
 		}
 
-		public Long getMsisdn() {
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public String getMsisdn() {
 			return msisdn;
 		}
 
-		public void setMsisdn(Long msisdn) {
+		public void setMsisdn(String msisdn) {
 			this.msisdn = msisdn;
 		}
 
@@ -115,6 +125,7 @@ public interface FebService {
 		}
 
 		public void loadIntoEntity(FebEntity entity) {
+			entity.setId(this.id);
 			entity.setMsisdn(this.msisdn);
 			entity.setAcctLvlCmpntDesc(this.acctLvlCmpntDesc);
 			entity.setAcctLvlCmpntId(this.acctLvlCmpntId);
@@ -127,6 +138,7 @@ public interface FebService {
 		}
 
 		public void loadFromEntity(FebEntity entity) {
+			this.id = entity.getId();
 			this.msisdn = entity.getMsisdn();
 			this.acctLvlCmpntDesc = entity.getAcctLvlCmpntDesc();
 			this.acctLvlCmpntId = entity.getAcctLvlCmpntId();
