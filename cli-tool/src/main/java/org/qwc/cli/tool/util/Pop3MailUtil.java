@@ -21,7 +21,7 @@ import javax.mail.Store;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class MailUtil {
+public class Pop3MailUtil {
 	public static void main(String[] args) {
 		String host = "pop.gmail.com";// change accordingly
 		String mailStoreType = "pop3";
@@ -59,8 +59,8 @@ public class MailUtil {
 
 			for (int i = 0; i < messages.length; i++) {
 				Message message = messages[i];
-
-				if (message.getSubject().contains("PPU")) {
+				if (message.getSubject().contains("PPU_")) {
+					// if (message.getSubject().contains("PPU_" + DateUtil.getCurrentDate())) {
 
 					Multipart multipart = (Multipart) message.getContent();
 

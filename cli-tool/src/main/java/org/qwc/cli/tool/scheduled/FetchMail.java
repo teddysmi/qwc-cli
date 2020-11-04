@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.qwc.cli.tool.service.UserService;
 import org.qwc.cli.tool.service.UserService.User;
-import org.qwc.cli.tool.util.MailUtil;
+import org.qwc.cli.tool.util.Pop3MailUtil;
 import org.qwc.cli.tool.util.TxtFileParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class FetchMail {
 	@Autowired
 	private UserService userService;
 
-	@Scheduled(fixedDelay = 10000, initialDelay = 10000)
+	//@Scheduled(fixedDelay = 10000, initialDelay = 10000)
 	public void scheduledDailyFetchMailTask() {
 		System.out.println("Start");
 
@@ -35,7 +35,7 @@ public class FetchMail {
 			return;
 		}
 
-		String filePath = MailUtil.fetch(HOST, MAIL_STORE_TYPE, user.getEmail(), user.getPassword());
+		String filePath = Pop3MailUtil.fetch(HOST, MAIL_STORE_TYPE, user.getEmail(), user.getPassword());
 
 		System.out.println(filePath);
 

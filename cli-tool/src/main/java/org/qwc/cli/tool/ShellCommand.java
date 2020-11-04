@@ -8,6 +8,7 @@ import org.apache.commons.validator.routines.EmailValidator;
 import org.qwc.cli.tool.scheduled.FetchMail;
 import org.qwc.cli.tool.service.UserService;
 import org.qwc.cli.tool.service.UserService.User;
+import org.qwc.cli.tool.util.DateUtil;
 import org.qwc.cli.tool.util.TxtFileParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,5 +88,11 @@ public class ShellCommand {
 		}
 
 		return "Successfully saved email credentials!";
+	}
+
+	@ShellMethod(value = "Get current YYYYMMDD", group = "Date Commands")
+	public String date() {
+
+		return DateUtil.getCurrentDate();
 	}
 }
