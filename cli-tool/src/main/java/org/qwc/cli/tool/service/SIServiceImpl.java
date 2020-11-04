@@ -1,5 +1,6 @@
 package org.qwc.cli.tool.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,26 +17,26 @@ public class SIServiceImpl implements SIService {
     @Autowired
     private SIRepository siRepository;
 
-    @Override
-    public void clearSI() {
-        // clear sis before adding
-        siRepository.deleteAll();
-    }
+
 
     @Transactional
     @Override
-    public SI createSI(SI si) {
+    public void createSI(List<SI> siList) {
+
+        // clear sis before adding
+        siRepository.deleteAll();
+
+        List<SIEntity> siEntityList = new ArrayList<>();
+
+        for(SI si : siList) {
+            SIEntity entity = new SIEntity();
+            si.loadIntoEntity(entity);
+            siEntityList.add(entity);
+        }
 
 
-        SIEntity entity = new SIEntity();
-        si.loadIntoEntity(entity);
+        siRepository.saveAll(siEntityList);
 
-        siRepository.saveAndFlush(entity);
-
-        SI newSI = new SI();
-        newSI.loadFromEntity(entity);
-
-        return newSI;
     }
 
     @Override

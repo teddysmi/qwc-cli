@@ -11,9 +11,7 @@ public interface FebService {
 
 	Feb getFeb();
 
-	void clearFeb();
-
-	Feb createFeb(Feb feb);
+	void createFeb(List<Feb> feb);
 
 	public class Feb {
 

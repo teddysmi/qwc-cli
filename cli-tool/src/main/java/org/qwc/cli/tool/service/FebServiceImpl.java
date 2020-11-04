@@ -1,5 +1,6 @@
 package org.qwc.cli.tool.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.qwc.cli.tool.dao.FebEntity;
 import org.qwc.cli.tool.dao.FebRepository;
+import org.qwc.cli.tool.dao.SIEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,25 +18,25 @@ public class FebServiceImpl implements FebService {
 	@Autowired
 	private FebRepository febRepository;
 
-	@Override
-	public void clearFeb() {
-		// clear febs before adding
-		febRepository.deleteAll();
-	}
+
 
 	@Transactional
 	@Override
-	public Feb createFeb(Feb feb) {
+	public void createFeb(List<Feb> febList) {
 
-		FebEntity entity = new FebEntity();
-		feb.loadIntoEntity(entity);
+		// clear sis before adding
+		febRepository.deleteAll();
 
-		febRepository.saveAndFlush(entity);
+		List<FebEntity> febEntityList = new ArrayList<>();
 
-		Feb newFeb = new Feb();
-		newFeb.loadFromEntity(entity);
+		for(Feb feb : febList) {
+			FebEntity entity = new FebEntity();
+			feb.loadIntoEntity(entity);
+			febEntityList.add(entity);
+		}
 
-		return newFeb;
+
+		febRepository.saveAll(febEntityList);
 	}
 
 	@Override

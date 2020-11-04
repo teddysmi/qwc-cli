@@ -10,9 +10,7 @@ public interface SIService {
 
     SI getSI();
 
-    void clearSI();
-
-    SI createSI(SI si);
+    void createSI(List<SI> siList);
 
     public class SI {
         private Long msisdn;
