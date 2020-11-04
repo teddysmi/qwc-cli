@@ -39,7 +39,7 @@ public class FetchMail {
 
 		System.out.println(filePath);
 
-		Map<String, Double> x = TxtFileParser.parse(filePath);
+		Map<Long, Double> x = TxtFileParser.parse(filePath);
 		x.entrySet().forEach(System.out::println);
 		// System.out.println(x.size());
 

@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class TxtFileParser {
 
-	public static Map<String, Double> parse(String filename) {
+	public static Map<Long, Double> parse(String filename) {
 
-		Map<String, Double> map = new HashMap<>();
+		Map<Long, Double> map = new HashMap<>();
 		try {
 			BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(filename));
 
@@ -24,7 +24,7 @@ public class TxtFileParser {
 				}
 				String[] subString = line.split("\t");
 
-				map.put(subString[0], Double.valueOf(subString[1]));
+				map.put(Long.parseLong(subString[0].trim()), Double.valueOf(subString[1]));
 
 			}
 
