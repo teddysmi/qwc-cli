@@ -5,6 +5,8 @@
 	<groupId>org.qwc</groupId>
 	<artifactId>cli-tool</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -126,7 +128,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>org.qwc.cli.tool.main.Application</mainClass>
+							<mainClass>org.qwc.cli.tool.Application</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

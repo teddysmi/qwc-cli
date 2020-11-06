@@ -1,59 +1,57 @@
 package org.qwc.cli.tool.util;
 
-import com.sun.mail.smtp.SMTPTransport;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Date;
+
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 public class SmtpMailUtil {
 
-	private static final String SMTP_SERVER = "smtp server ";
+	private static final String SMTP_SERVER = "smtp.gmail.com";
 
-	private static final String EMAIL_TO = "johndoe.dev99@gmail.com";
-
-	public static void sendMail(String username, String password) {
+	public static void sendMail(String username, String password, String recipient, Map<String, Double> map) {
 		Properties prop = System.getProperties();
-		prop.put("mail.smtp.host", SMTP_SERVER); // optional, defined in SMTPTransport
+		prop.put("mail.smtp.host", SMTP_SERVER);
+		prop.put("mail.smtp.port", "587");
 		prop.put("mail.smtp.auth", "true");
-		prop.put("mail.smtp.port", "25"); // default port 25
+		prop.put("mail.smtp.starttls.enable", "true"); // TLS
 
-		Session session = Session.getInstance(prop, null);
-		Message msg = new MimeMessage(session);
+		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
 
 		try {
 
-			// from
-			msg.setFrom(new InternetAddress(username));
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+			message.setSubject("DQMS Daily PPU report on " + DateUtil.getCurrentDate());
+			String data = "Hi All,\n";
+			if (!map.isEmpty()) {
+				data += "There is PPU for report " + DateUtil.getCurrentDate() + "\n";
+				for (Entry<String, Double> entry : map.entrySet()) {
+					data += "Mobile:" + entry.getKey() + "\n";
+					data += "Amount:$" + entry.getValue() + "\n";
+				}
+			} else {
+				data += "There is no new PPU for report " + DateUtil.getCurrentDate() + "\n";
+			}
 
-			// to
-			msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(EMAIL_TO, false));
+			data += "Thanks.";
+			message.setText(data);
 
-			// subject
-			msg.setSubject("DQMS Daily PPU report on " + DateUtil.getCurrentDate());
+			Transport.send(message);
 
-			// content
-			// TODO: add N/A ids here
-			msg.setText("Hello World");
-
-			msg.setSentDate(new Date());
-
-			// Get SMTPTransport
-			SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
-
-			// connect
-			t.connect(SMTP_SERVER, username, password);
-
-			// send
-			t.sendMessage(msg, msg.getAllRecipients());
-
-			System.out.println("Response: " + t.getLastServerResponse());
-
-			t.close();
+			System.out.println("Email sent!");
 
 		} catch (MessagingException e) {
 			e.printStackTrace();
