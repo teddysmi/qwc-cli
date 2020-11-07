@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.qwc.cli.tool.service.FebService;
 import org.qwc.cli.tool.service.RecipientService;
@@ -42,15 +43,15 @@ public class FetchMail {
 	@Autowired
 	private RecipientService recipientService;
 
-	// @Scheduled(cron = "0 17 2 * * *")
-	@Scheduled(fixedDelay = 30000, initialDelay = 15000)
+	// @Scheduled(cron = "0 0 9 * * *")
+	@Scheduled(fixedDelay = 30000, initialDelay = 30000)
 	public void scheduledDailyFetchMailTask() {
 
 		Calendar c1 = Calendar.getInstance();
 
 		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			System.out.println("Not today");
-			//return;
+			// return;
 		}
 
 		System.out.println("Start scheduled task");
@@ -70,7 +71,7 @@ public class FetchMail {
 		}
 
 		Map<String, Double> dailyPPUData = new HashMap<>();
-
+		Map<String, Double> output = new HashMap<>();
 		String filePath = Pop3MailUtil.fetch(HOST, MAIL_STORE_TYPE, user.getEmail(), user.getPassword());
 		System.out.println(filePath);
 		if (filePath == null) {
@@ -78,17 +79,21 @@ public class FetchMail {
 		} else {
 			dailyPPUData = TxtFileParser.parse(filePath);
 
+			for (Entry<String, Double> map : dailyPPUData.entrySet()) {
+				output.put(map.getKey(), map.getValue());
+			}
+
 			for (String msisdn : dailyPPUData.keySet()) {
 				if (febService.findByMsisdn(msisdn)) {
-					dailyPPUData.remove(msisdn);
+					output.remove(msisdn);
 				}
 				if (siService.findByMsisdn(msisdn)) {
-					dailyPPUData.remove(msisdn);
+					output.remove(msisdn);
 				}
 			}
 		}
 
-		SmtpMailUtil.sendMail(user.getEmail(), user.getPassword(), recipient.getEmail(), dailyPPUData);
+		SmtpMailUtil.sendMail(user.getEmail(), user.getPassword(), recipient.getEmail(), output);
 
 		System.out.println("End scheduled task");
 	}

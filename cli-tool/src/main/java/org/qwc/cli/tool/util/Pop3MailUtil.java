@@ -43,8 +43,8 @@ public class Pop3MailUtil {
 			for (int i = 0; i < messages.length; i++) {
 				System.out.println("Looping inbox " + (i + 1) + "/" + messages.length);
 				Message message = messages[i];
-				if (message.getSubject().contains("PPU_")) {
-					// if (message.getSubject().contains("PPU_" + DateUtil.getCurrentDate())) {
+
+				if (message.getSubject().contains("PPU_" + DateUtil.getCurrentDate())) {
 
 					Multipart multipart = (Multipart) message.getContent();
 
