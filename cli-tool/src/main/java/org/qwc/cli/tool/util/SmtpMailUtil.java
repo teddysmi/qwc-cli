@@ -14,11 +14,9 @@ import java.util.Properties;
 
 public class SmtpMailUtil {
 
-	private static final String SMTP_SERVER = "smtp.gmail.com";
-
 	public static void sendMail(String username, String password, String recipient, Map<String, Double> map) {
 		Properties prop = System.getProperties();
-		prop.put("mail.smtp.host", SMTP_SERVER);
+		prop.put("mail.smtp.host", username.contains("gmail.com") ? "smtp.gmail.com" : "smtp-mail.outlook.com");
 		prop.put("mail.smtp.port", "587");
 		prop.put("mail.smtp.auth", "true");
 		prop.put("mail.smtp.starttls.enable", "true"); // TLS
