@@ -27,9 +27,6 @@ public class FetchMail {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(FetchMail.class);
 
-	private static final String HOST = "pop.gmail.com";
-
-	private static final String MAIL_STORE_TYPE = "pop3";
 
 	@Autowired
 	private UserService userService;
@@ -72,7 +69,7 @@ public class FetchMail {
 
 		Map<String, Double> dailyPPUData = new HashMap<>();
 		Map<String, Double> output = new HashMap<>();
-		String filePath = Pop3MailUtil.fetch(HOST, MAIL_STORE_TYPE, user.getEmail(), user.getPassword());
+		String filePath = Pop3MailUtil.fetch(user.getEmail(), user.getPassword());
 		System.out.println(filePath);
 		if (filePath == null) {
 
