@@ -196,4 +196,10 @@ public class ShellCommand {
 
 		return DateUtil.getCurrentDate();
 	}
+
+	@ShellMethod(value = "get Path", group = "Check Commands")
+	public String path(){
+		return new File(".").getAbsolutePath();
+
+	}
 }

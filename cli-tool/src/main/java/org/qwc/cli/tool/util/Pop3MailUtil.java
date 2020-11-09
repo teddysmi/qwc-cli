@@ -15,6 +15,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 import org.apache.commons.lang3.StringUtils;
+import org.qwc.cli.tool.Application;
 import org.qwc.cli.tool.scheduled.FetchMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,9 @@ public class Pop3MailUtil {
 						}
 						InputStream is = bodyPart.getInputStream();
 
-						File f = new File("/tmp/" + bodyPart.getFileName());
+						String pathname = new File("").getAbsolutePath();
+
+						File f = new File(pathname+"/" + bodyPart.getFileName());
 						FileOutputStream fos = new FileOutputStream(f);
 						byte[] buf = new byte[4096];
 						int bytesRead;
@@ -90,6 +93,7 @@ public class Pop3MailUtil {
 			store.close();
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.error("Error downloading");
 		}
 
