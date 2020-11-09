@@ -173,7 +173,6 @@ public class ShellCommand {
 		if (user != null) {
 			settings += user.getEmail();
 		}
-		
 
 		settings += "\nPassword: ";
 
@@ -198,8 +197,8 @@ public class ShellCommand {
 	}
 
 	@ShellMethod(value = "get Path", group = "Check Commands")
-	public String path(){
-		return new File(".").getAbsolutePath();
+	public String path() {
+		return new File("").getAbsolutePath();
 
 	}
 }

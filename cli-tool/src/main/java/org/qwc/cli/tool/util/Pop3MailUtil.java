@@ -15,8 +15,6 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 import org.apache.commons.lang3.StringUtils;
-import org.qwc.cli.tool.Application;
-import org.qwc.cli.tool.scheduled.FetchMail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,15 +48,19 @@ public class Pop3MailUtil {
 			for (int i = messages.length - 1; i >= 0; i--) {
 				System.out.println("Looping inbox " + (messages.length - i) + "/" + messages.length);
 				Message message = messages[i];
+				System.out.println("email subject" + message.getSubject());
 
 				if (message.getSubject().contains("DQMS Daily PPU report on " + DateUtil.getCurrentDate())) {
 
+					if (!(message.getContent() instanceof Multipart)) {
+						continue;
+					}
 					Multipart multipart = (Multipart) message.getContent();
 					message.setFlag(Flags.Flag.SEEN, true);
 
 					for (int j = 0; j < multipart.getCount(); j++) {
 						BodyPart bodyPart = multipart.getBodyPart(j);
-						LOGGER.error("Attachment size: " + multipart.getCount());
+
 						if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())
 								&& StringUtils.isBlank(bodyPart.getFileName())) {
 							continue; // dealing with attachments only
@@ -67,7 +69,7 @@ public class Pop3MailUtil {
 
 						String pathname = new File("").getAbsolutePath();
 
-						File f = new File(pathname+"/" + bodyPart.getFileName());
+						File f = new File(pathname + "/" + bodyPart.getFileName());
 						FileOutputStream fos = new FileOutputStream(f);
 						byte[] buf = new byte[4096];
 						int bytesRead;
