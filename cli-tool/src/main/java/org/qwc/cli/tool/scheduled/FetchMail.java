@@ -43,15 +43,15 @@ public class FetchMail {
 	@Autowired
 	private RecipientService recipientService;
 
-	// @Scheduled(cron = "0 0 9 * * *")
 	@Scheduled(fixedDelay = 30000, initialDelay = 30000)
+	// @Scheduled(cron = "0 10 9 * * *")
 	public void scheduledDailyFetchMailTask() {
 
 		Calendar c1 = Calendar.getInstance();
 
 		if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			System.out.println("Not today");
-			// return;
+			System.out.println("Not today, i dont work on weekends!");
+			return;
 		}
 
 		System.out.println("Start scheduled task");

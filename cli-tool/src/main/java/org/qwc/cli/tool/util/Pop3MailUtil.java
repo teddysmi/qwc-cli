@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -14,8 +15,13 @@ import javax.mail.Session;
 import javax.mail.Store;
 
 import org.apache.commons.lang3.StringUtils;
+import org.qwc.cli.tool.scheduled.FetchMail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Pop3MailUtil {
+
+	private static Logger LOGGER = LoggerFactory.getLogger(Pop3MailUtil.class);
 
 	public static String fetch(String pop3Host, String storeType, String user, String password) {
 		try {
@@ -35,21 +41,23 @@ public class Pop3MailUtil {
 
 			// create the folder object and open it
 			Folder emailFolder = store.getFolder("INBOX");
-			emailFolder.open(Folder.READ_ONLY);
+			emailFolder.open(Folder.READ_WRITE);
 
 			// retrieve the messages from the folder in an array and print it
 			Message[] messages = emailFolder.getMessages();
 
-			for (int i = 0; i < messages.length; i++) {
-				System.out.println("Looping inbox " + (i + 1) + "/" + messages.length);
+			for (int i = messages.length - 1; i >= 0; i--) {
+				System.out.println("Looping inbox " + (messages.length - i) + "/" + messages.length);
 				Message message = messages[i];
 
-				if (message.getSubject().contains("PPU_" + DateUtil.getCurrentDate())) {
+				if (message.getSubject().contains("DQMS Daily PPU report on " + DateUtil.getCurrentDate())) {
 
 					Multipart multipart = (Multipart) message.getContent();
+					message.setFlag(Flags.Flag.SEEN, true);
 
 					for (int j = 0; j < multipart.getCount(); j++) {
 						BodyPart bodyPart = multipart.getBodyPart(j);
+						LOGGER.error("Attachment size: " + multipart.getCount());
 						if (!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition())
 								&& StringUtils.isBlank(bodyPart.getFileName())) {
 							continue; // dealing with attachments only
@@ -65,6 +73,10 @@ public class Pop3MailUtil {
 						}
 						fos.close();
 
+						// close the store and folder objects
+						emailFolder.close(false);
+						store.close();
+
 						return f.getPath();
 
 					}
@@ -78,7 +90,7 @@ public class Pop3MailUtil {
 			store.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Error downloading");
 		}
 
 		return null;
