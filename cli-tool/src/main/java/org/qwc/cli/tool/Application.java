@@ -14,9 +14,9 @@ import org.springframework.shell.jline.PromptProvider;
 @SpringBootApplication
 public class Application {
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		System.out.println("Bye World");
 		
-		System.out.println("Hello World");
+		System.out.println("Bye World");
 		SpringApplication.run(Application.class, args);
 	}
 
