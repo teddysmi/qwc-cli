@@ -22,11 +22,7 @@ public class Pop3MailUtil {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(Pop3MailUtil.class);
 
-	public static String fetch(String user, String password) {
-
-		String pop3Host = user.contains("gmail.com") ? "pop.gmail.com"
-				: user.contains("outlook.com") ? "pop3.outlook.com" : "outlook.office365.com";
-
+	public static String fetch(String pop3Host, String storeType, String user, String password) {
 		try {
 			// create properties field
 			Properties properties = new Properties();
