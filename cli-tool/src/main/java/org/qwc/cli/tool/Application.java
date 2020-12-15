@@ -16,12 +16,30 @@ public class Application {
 	public static void main(String[] args) {
 		System.out.println("Hello World");
 
+		List<String> lst = new ArrayList<>();
+		lst.sort(List.de);
+
+		String x = "hello";
+		x.subString(0, 5);
+
 		System.out.println("Hello World");
 		SpringApplication.run(Application.class, args);
+	}
+
+	public Object hello(){
+
 	}
 
 	@Bean
 	public PromptProvider myPromptProvider() {
 		return () -> new AttributedString("cli-tool:>", AttributedStyle.DEFAULT.foreground(AttributedStyle.RED));
 	}
+}
+
+public class x extends Application{
+
+	public Object hello(){
+
+	}
+
 }
