@@ -14,8 +14,6 @@ import javax.persistence.Table;
 @Table(schema = "public", name = "tbl_feb")
 public class FebEntity implements Serializable {
 
-	private String test;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", unique = true, nullable = false)
